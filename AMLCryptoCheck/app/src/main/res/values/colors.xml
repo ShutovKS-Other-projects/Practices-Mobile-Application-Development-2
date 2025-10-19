@@ -2,4 +2,17 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="dark_blue_primary">#101828</color> <!-- Фон экрана -->
+    <color name="dark_blue_secondary">#1D2939</color> <!-- Фон полей ввода -->
+    <color name="accent_blue">#0099FF</color> <!-- Цвет кнопки и ссылок -->
+    <color name="white_text">#FFFFFF</color>
+    <color name="light_gray_text">#D0D5DD</color> <!-- Цвет второстепенного текста -->
+    <color name="hint_text_color">#667085</color> <!-- Цвет подсказок в полях ввода -->
+
+    <color name="risk_high">#F04438</color> <!-- Красный -->
+    <color name="risk_medium">#F79009</color> <!-- Оранжевый -->
+    <color name="risk_low">#12B76A</color> <!-- Зеленый -->
+
+    <color name="dark_blue_tertiary">#1D2939</color>
 </resources>

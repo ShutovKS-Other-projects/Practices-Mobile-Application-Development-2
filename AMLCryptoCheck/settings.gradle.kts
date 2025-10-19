@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "AML Crypto Check"
 include(":app")
- 
+include(":domain")
+include(":data")

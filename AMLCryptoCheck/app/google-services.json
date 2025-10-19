@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "900300786725",
+    "project_id": "aml-crypto-check",
+    "storage_bucket": "aml-crypto-check.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:900300786725:android:7208b0f5110aeec50a03cc",
+        "android_client_info": {
+          "package_name": "ru.mirea.shutov.amlcryptocheck"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqo5PbKmfXgprMI-ApToJSOLfj1qlaGl0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
