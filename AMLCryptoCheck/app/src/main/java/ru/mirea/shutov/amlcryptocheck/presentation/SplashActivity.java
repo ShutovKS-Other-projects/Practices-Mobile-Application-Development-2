@@ -7,9 +7,6 @@ import android.os.Looper;
 import androidx.appcompat.app.AppCompatActivity;
 
 import ru.mirea.shutov.amlcryptocheck.R;
-import ru.mirea.shutov.data.repository.AuthRepositoryImpl;
-import ru.mirea.shutov.domain.repository.AuthRepository;
-import ru.mirea.shutov.domain.usecase.CheckUserLoggedInUseCase;
 
 public class SplashActivity extends AppCompatActivity {
     private static final int SPLASH_DELAY = 1500;
@@ -19,11 +16,12 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        new Handler(Looper.getMainLooper()).postDelayed(this::checkUserStatus, SPLASH_DELAY);
+        new Handler(Looper.getMainLooper()).postDelayed(() ->
+                navigateTo(MainActivity.class), SPLASH_DELAY);
     }
 
-    private void checkUserStatus() {
-        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+    private void navigateTo(Class<?> activityClass) {
+        Intent intent = new Intent(SplashActivity.this, activityClass);
         startActivity(intent);
         finish();
     }

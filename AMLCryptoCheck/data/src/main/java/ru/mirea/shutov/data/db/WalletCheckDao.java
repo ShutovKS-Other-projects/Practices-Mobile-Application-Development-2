@@ -1,5 +1,6 @@
 package ru.mirea.shutov.data.db;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -12,5 +13,5 @@ public interface WalletCheckDao {
     void insert(WalletCheckDbo walletCheck);
 
     @Query("SELECT * FROM history_table ORDER BY checkDate DESC")
-    List<WalletCheckDbo> getAll();
+    LiveData<List<WalletCheckDbo>> getAll();
 }

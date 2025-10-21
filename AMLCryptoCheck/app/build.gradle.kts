@@ -36,6 +36,9 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
 
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.9.4")
+    implementation("androidx.lifecycle:lifecycle-livedata:2.9.4")
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

@@ -94,8 +94,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editTextPassword" />
 
+    <!-- Индикатор загрузки -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/layoutLoginLink"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonRegister"
+        tools:visibility="visible" />
 
-    <!-- Ссылка на вход (меняем текст и ID) -->
+    <!-- Ссылка на вход -->
     <LinearLayout
         android:id="@+id/layoutLoginLink"
         android:layout_width="wrap_content"

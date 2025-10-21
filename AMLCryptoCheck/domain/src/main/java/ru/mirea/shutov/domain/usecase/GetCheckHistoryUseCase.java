@@ -1,5 +1,7 @@
 package ru.mirea.shutov.domain.usecase;
 
+import androidx.lifecycle.LiveData;
+
 import java.util.List;
 
 import ru.mirea.shutov.domain.models.WalletCheck;
@@ -12,7 +14,7 @@ public class GetCheckHistoryUseCase {
         this.walletRepository = walletRepository;
     }
 
-    public List<WalletCheck> execute() {
+    public LiveData<List<WalletCheck>> execute() {
         return walletRepository.getCheckHistory();
     }
 }

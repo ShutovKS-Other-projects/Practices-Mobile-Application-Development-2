@@ -3,66 +3,65 @@ package ru.mirea.shutov.amlcryptocheck.presentation;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
 
 import ru.mirea.shutov.amlcryptocheck.R;
-import ru.mirea.shutov.data.repository.AuthRepositoryImpl;
-import ru.mirea.shutov.domain.repository.AuthCallback;
-import ru.mirea.shutov.domain.repository.AuthRepository;
-import ru.mirea.shutov.domain.usecase.CheckUserLoggedInUseCase;
-import ru.mirea.shutov.domain.usecase.RegisterUseCase;
 
 public class RegisterActivity extends AppCompatActivity {
 
+    private RegisterViewModel registerViewModel;
+
     private EditText editTextEmail, editTextPassword;
     private MaterialButton buttonRegister;
+    private ProgressBar progressBar;
     private LinearLayout layoutLoginLink;
-
-    private RegisterUseCase registerUseCase;
-    private CheckUserLoggedInUseCase checkUserLoggedInUseCase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        var authRepository = new AuthRepositoryImpl();
-
-        checkUserLoggedInUseCase = new CheckUserLoggedInUseCase(authRepository);
-        if (checkUserLoggedInUseCase.execute()) {
-            navigateToMain();
-            return;
-        }
-
-        registerUseCase = new RegisterUseCase(authRepository);
+        ViewModelFactory viewModelFactory = new ViewModelFactory(this);
+        registerViewModel = new ViewModelProvider(this, viewModelFactory).get(RegisterViewModel.class);
 
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
         buttonRegister = findViewById(R.id.buttonRegister);
+        progressBar = findViewById(R.id.progressBar);
         layoutLoginLink = findViewById(R.id.layoutLoginLink);
 
-        buttonRegister.setOnClickListener(v -> registerUser());
+        registerViewModel.getRegisterResult().observe(this, result -> {
+            if (result == null) return;
 
-        layoutLoginLink.setOnClickListener(v -> {
-            finish();
+            progressBar.setVisibility(result.getStatus() == RegisterResult.Status.LOADING ? View.VISIBLE : View.GONE);
+
+            if (result.getStatus() == RegisterResult.Status.SUCCESS) {
+                Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show();
+                navigateToMain();
+            } else if (result.getStatus() == RegisterResult.Status.ERROR) {
+                Toast.makeText(this, result.getErrorMessage(), Toast.LENGTH_LONG).show();
+            }
         });
+
+        buttonRegister.setOnClickListener(v -> registerUser());
+        layoutLoginLink.setOnClickListener(v -> finish());
     }
 
     private void registerUser() {
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
-        if (TextUtils.isEmpty(email)) {
-            Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (TextUtils.isEmpty(password)) {
-            Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
         if (password.length() < 6) {
@@ -70,18 +69,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        registerUseCase.execute(email, password, new AuthCallback() {
-            @Override
-            public void onSuccess() {
-                Toast.makeText(RegisterActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
-                navigateToMain();
-            }
-
-            @Override
-            public void onError(String message) {
-                Toast.makeText(RegisterActivity.this, "Registration failed: " + message, Toast.LENGTH_LONG).show();
-            }
-        });
+        registerViewModel.register(email, password);
     }
 
     private void navigateToMain() {

@@ -1,5 +1,8 @@
 package ru.mirea.shutov.data.repository;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,9 +30,11 @@ public class WalletRepositoryImpl implements WalletRepository {
     }
 
     @Override
-    public List<WalletCheck> getCheckHistory() {
-        List<WalletCheckDbo> dtoList = walletCheckDao.getAll();
-        return dtoList.stream().map(this::mapToDomain).collect(Collectors.toList());
+    public LiveData<List<WalletCheck>> getCheckHistory() {
+        LiveData<List<WalletCheckDbo>> dtoListLiveData = walletCheckDao.getAll();
+        return Transformations.map(dtoListLiveData, dtoList ->
+                dtoList.stream().map(this::mapToDomain).collect(Collectors.toList())
+        );
     }
 
     private WalletCheckDbo mapToDbo(WalletCheck domainModel) {
