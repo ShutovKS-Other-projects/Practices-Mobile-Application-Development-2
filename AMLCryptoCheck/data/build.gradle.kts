@@ -32,6 +32,9 @@ android {
 dependencies {
     implementation(project(":domain"))
 
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.firebase.auth)

@@ -1,30 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/history_item_background"
-    android:orientation="vertical"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:padding="16dp"
     android:layout_marginBottom="12dp">
 
-    <TextView
-        android:id="@+id/textViewAddress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0x123abc456def78901234567890abcdef12345"
-        android:textColor="@color/white_text"
-        android:textSize="16sp"
-        android:singleLine="true"
-        android:ellipsize="middle"/>
+    <ImageView
+        android:id="@+id/imageViewCurrencyIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="16dp"
+        tools:src="@drawable/ic_placeholder" /> <!-- Используем заглушку, которую создавали ранее -->
 
-    <TextView
-        android:id="@+id/textViewRisk"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="High Risk"
-        android:textColor="@color/risk_high"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            android:textColor="@color/white_text"
+            android:textSize="16sp"
+            tools:text="0x123abc456def78901234567890abcdef12345" />
+
+        <TextView
+            android:id="@+id/textViewRisk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textColor="@color/risk_high"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="High Risk" />
+
+    </LinearLayout>
 
 </LinearLayout>

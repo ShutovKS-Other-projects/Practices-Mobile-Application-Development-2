@@ -1,14 +1,16 @@
 package ru.mirea.shutov.amlcryptocheck.presentation;
 
 import android.content.Context;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import ru.mirea.shutov.data.db.AppDatabase;
-import ru.mirea.shutov.data.network.MockNetworkApi;
+import ru.mirea.shutov.data.network.RetrofitNetworkApi;
 import ru.mirea.shutov.data.repository.AuthRepositoryImpl;
 import ru.mirea.shutov.data.repository.WalletRepositoryImpl;
+import ru.mirea.shutov.domain.network.NetworkApi;
 import ru.mirea.shutov.domain.repository.AuthRepository;
 import ru.mirea.shutov.domain.repository.WalletRepository;
 import ru.mirea.shutov.domain.usecase.CheckWalletUseCase;
@@ -29,7 +31,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (modelClass.isAssignableFrom(MainViewModel.class)) {
             AppDatabase db = AppDatabase.getDatabase(context);
-            MockNetworkApi networkApi = new MockNetworkApi();
+            NetworkApi networkApi = new RetrofitNetworkApi();
             WalletRepository walletRepository = new WalletRepositoryImpl(networkApi, db.walletCheckDao());
             CheckWalletUseCase checkWalletUseCase = new CheckWalletUseCase(walletRepository);
             GetCheckHistoryUseCase getCheckHistoryUseCase = new GetCheckHistoryUseCase(walletRepository);

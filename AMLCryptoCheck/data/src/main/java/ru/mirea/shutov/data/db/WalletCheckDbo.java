@@ -10,4 +10,5 @@ public class WalletCheckDbo {
     public String address;
     public int riskScore;
     public long checkDate;
+    public String currencyIconUrl;
 }

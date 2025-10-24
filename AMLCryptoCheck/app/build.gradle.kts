@@ -39,6 +39,8 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel:2.9.4")
     implementation("androidx.lifecycle:lifecycle-livedata:2.9.4")
 
+    implementation("com.squareup.picasso:picasso:2.71828")
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

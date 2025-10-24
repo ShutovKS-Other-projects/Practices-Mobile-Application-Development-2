@@ -14,4 +14,7 @@ public interface WalletCheckDao {
 
     @Query("SELECT * FROM history_table ORDER BY checkDate DESC")
     LiveData<List<WalletCheckDbo>> getAll();
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<WalletCheckDbo> dtoList);
 }
