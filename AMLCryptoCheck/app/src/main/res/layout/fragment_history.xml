@@ -6,8 +6,9 @@
     android:layout_height="match_parent"
     android:background="@color/dark_blue_primary"
     android:padding="20dp"
-    tools:context=".presentation.MainActivity">
+    tools:context=".presentation.HistoryFragment">
 
+    <!-- Верхняя панель -->
     <TextView
         android:id="@+id/textViewAppTitle"
         android:layout_width="wrap_content"
@@ -23,22 +24,25 @@
         android:id="@+id/buttonScan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:gravity="center"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_scan"/>
+            android:src="@drawable/ic_scan" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Scan"
             android:textColor="@color/light_gray_text"
-            android:textSize="12sp"/>
+            android:textSize="12sp" />
     </LinearLayout>
 
+    <!-- Поле ввода -->
     <EditText
         android:id="@+id/editTextWalletAddress"
         android:layout_width="0dp"
@@ -69,6 +73,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editTextWalletAddress" />
 
+    <!-- Список истории -->
     <TextView
         android:id="@+id/textViewHistoryTitle"
         android:layout_width="wrap_content"

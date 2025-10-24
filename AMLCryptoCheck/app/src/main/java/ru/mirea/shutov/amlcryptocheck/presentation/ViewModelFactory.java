@@ -47,6 +47,10 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             RegisterUseCase registerUseCase = new RegisterUseCase(authRepository);
             return (T) new RegisterViewModel(registerUseCase);
         }
+        else if (modelClass.isAssignableFrom(ProfileViewModel.class)) {
+            AuthRepository authRepository = new AuthRepositoryImpl();
+            return (T) new ProfileViewModel(authRepository);
+        }
         throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
     }
 }

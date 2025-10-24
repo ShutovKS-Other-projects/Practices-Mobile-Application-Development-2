@@ -1,83 +1,51 @@
 package ru.mirea.shutov.amlcryptocheck.presentation;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import ru.mirea.shutov.amlcryptocheck.R;
-import ru.mirea.shutov.data.repository.AuthRepositoryImpl;
-import ru.mirea.shutov.domain.repository.AuthRepository;
 
 public class MainActivity extends AppCompatActivity {
-    private MainViewModel mainViewModel;
-    private AuthRepository authRepository;
-    private HistoryAdapter historyAdapter;
-    private EditText editTextWalletAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        ViewModelFactory viewModelFactory = new ViewModelFactory(this);
-        mainViewModel = new ViewModelProvider(this, viewModelFactory).get(MainViewModel.class);
-        authRepository = new AuthRepositoryImpl();
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation_view);
+        bottomNav.setOnItemSelectedListener(navListener);
 
-        if (authRepository.isUserLoggedIn()) {
-            setContentView(R.layout.activity_main_authenticated);
-            setupAuthenticatedUI();
-        } else {
-            setContentView(R.layout.activity_main);
-            setupGuestUI();
+        if (savedInstanceState == null) {
+            replaceFragment(new HistoryFragment());
         }
     }
 
-    private void setupAuthenticatedUI() {
-        editTextWalletAddress = findViewById(R.id.editTextWalletAddress);
+    private final BottomNavigationView.OnItemSelectedListener navListener =
+            item -> {
+                Fragment selectedFragment = null;
 
-        RecyclerView recyclerViewHistory = findViewById(R.id.recyclerViewHistory);
-        historyAdapter = new HistoryAdapter(this);
-        recyclerViewHistory.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewHistory.setAdapter(historyAdapter);
+                int itemId = item.getItemId();
+                if (itemId == R.id.navigation_history) {
+                    selectedFragment = new HistoryFragment();
+                } else if (itemId == R.id.navigation_profile) {
+                    selectedFragment = new ProfileFragment();
+                }
 
-        mainViewModel.getHistoryToDisplay().observe(this, historyList -> {
-            if (historyList != null) {
-                historyAdapter.setHistoryList(historyList);
-            }
-        });
+                if (selectedFragment != null) {
+                    replaceFragment(selectedFragment);
+                    return true;
+                }
+                return false;
+            };
 
-        findViewById(R.id.buttonCheckRisk).setOnClickListener(v -> {
-            String address = editTextWalletAddress.getText().toString().trim();
-            if (!address.isEmpty()) {
-                mainViewModel.onCheckRiskClicked(address);
-                editTextWalletAddress.setText("");
-            } else {
-                Toast.makeText(this, "Please enter a wallet address", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        findViewById(R.id.buttonScan).setOnClickListener(v ->
-                Toast.makeText(this, "Scan feature coming soon!", Toast.LENGTH_SHORT).show()
-        );
-    }
-
-    private void setupGuestUI() {
-        editTextWalletAddress = findViewById(R.id.editTextWalletAddress);
-
-        findViewById(R.id.buttonCheckRisk).setOnClickListener(v ->
-                mainViewModel.onCheckRiskClicked(editTextWalletAddress.getText().toString()));
-
-        findViewById(R.id.textViewLoginLink).setOnClickListener(v ->
-                navigateToLogin());
-    }
-
-    private void navigateToLogin() {
-        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-        startActivity(intent);
+    private void replaceFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_view, fragment)
+                .addToBackStack(null)
+                .commit();
     }
 }
