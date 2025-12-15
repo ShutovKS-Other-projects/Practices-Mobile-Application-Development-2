@@ -36,10 +36,10 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel:2.9.4")
-    implementation("androidx.lifecycle:lifecycle-livedata:2.9.4")
+    implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.lifecycle.livedata)
 
-    implementation("com.squareup.picasso:picasso:2.71828")
+    implementation(libs.picasso)
 
     implementation(libs.appcompat)
     implementation(libs.material)
@@ -49,6 +49,11 @@ dependencies {
     implementation(libs.credentials)
     implementation(libs.credentials.play.services.auth)
     implementation(libs.googleid)
+
+    // Navigation Component
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
+
     implementation(libs.androidx.room.runtime)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

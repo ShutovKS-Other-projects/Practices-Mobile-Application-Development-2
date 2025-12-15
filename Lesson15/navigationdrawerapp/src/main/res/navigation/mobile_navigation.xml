@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_schedule">
+
+    <fragment
+        android:id="@+id/nav_schedule"
+        android:name="ru.mirea.navigationdrawerapp.ScheduleFragment"
+        android:label="Расписание"
+        tools:layout="@layout/fragment_schedule" />
+
+    <fragment
+        android:id="@+id/nav_grades"
+        android:name="ru.mirea.navigationdrawerapp.GradesFragment"
+        android:label="Журнал оценок"
+        tools:layout="@layout/fragment_grades" />
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="ru.mirea.navigationdrawerapp.SettingsFragment"
+        android:label="Настройки"
+        tools:layout="@layout/fragment_settings" />
+</navigation>

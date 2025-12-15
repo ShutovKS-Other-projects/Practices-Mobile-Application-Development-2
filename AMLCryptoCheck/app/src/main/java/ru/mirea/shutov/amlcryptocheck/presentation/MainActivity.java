@@ -3,7 +3,9 @@ package ru.mirea.shutov.amlcryptocheck.presentation;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -17,35 +19,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation_view);
-        bottomNav.setOnItemSelectedListener(navListener);
 
-        if (savedInstanceState == null) {
-            replaceFragment(new HistoryFragment());
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment);
+
+        if (navHostFragment != null) {
+            NavController navController = navHostFragment.getNavController();
+            NavigationUI.setupWithNavController(bottomNav, navController);
         }
-    }
-
-    private final BottomNavigationView.OnItemSelectedListener navListener =
-            item -> {
-                Fragment selectedFragment = null;
-
-                int itemId = item.getItemId();
-                if (itemId == R.id.navigation_history) {
-                    selectedFragment = new HistoryFragment();
-                } else if (itemId == R.id.navigation_profile) {
-                    selectedFragment = new ProfileFragment();
-                }
-
-                if (selectedFragment != null) {
-                    replaceFragment(selectedFragment);
-                    return true;
-                }
-                return false;
-            };
-
-    private void replaceFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container_view, fragment)
-                .addToBackStack(null)
-                .commit();
     }
 }

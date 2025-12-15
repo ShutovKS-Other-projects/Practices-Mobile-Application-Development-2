@@ -1,0 +1,2014 @@
+Дата: Tue Dec 16 00:16:32 MSK 2025
+========================================
+
+## Структура проекта
+
+.
+./.gitignore
+./.idea
+./app
+./app/.gitignore
+./app/build.gradle.kts
+./app/google-services.json
+./app/proguard-rules.pro
+./app/src
+./app/src/main
+./app/src/main/AndroidManifest.xml
+./app/src/main/java
+./app/src/main/res
+./build.gradle.kts
+./collect_context.sh
+./data
+./data/.gitignore
+./data/build.gradle.kts
+./data/consumer-rules.pro
+./data/proguard-rules.pro
+./data/src
+./data/src/main
+./data/src/main/AndroidManifest.xml
+./data/src/main/java
+./domain
+./domain/.gitignore
+./domain/build.gradle.kts
+./domain/consumer-rules.pro
+./domain/proguard-rules.pro
+./domain/src
+./domain/src/main
+./domain/src/main/AndroidManifest.xml
+./domain/src/main/java
+./gradle
+./gradle.properties
+./gradle/libs.versions.toml
+./gradle/wrapper
+./gradle/wrapper/gradle-wrapper.jar
+./gradle/wrapper/gradle-wrapper.properties
+./gradlew
+./gradlew.bat
+./project_context.txt
+./resources
+./resources/layers.png
+./resources/screens
+./resources/screens/img.png
+./resources/screens/img_0.png
+./resources/screens/img_1.png
+./resources/screens/img_2.png
+./resources/screens/img_3.png
+./resources/screens/img_4.png
+./resources/use-case.png
+./settings.gradle.kts
+
+
+## Gradle & Config
+
+### ./app/build.gradle.kts
+```gradle
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.google.gms.google.services)
+}
+
+android {
+    namespace = "ru.mirea.shutov.amlcryptocheck"
+    compileSdk = 36
+
+    defaultConfig {
+        applicationId = "ru.mirea.shutov.amlcryptocheck"
+        minSdk = 24
+        targetSdk = 36
+        versionCode = 1
+        versionName = "1.0"
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    implementation(project(":data"))
+    implementation(project(":domain"))
+
+    implementation("androidx.lifecycle:lifecycle-viewmodel:2.9.4")
+    implementation("androidx.lifecycle:lifecycle-livedata:2.9.4")
+
+    implementation("com.squareup.picasso:picasso:2.71828")
+
+    implementation(libs.appcompat)
+    implementation(libs.material)
+    implementation(libs.activity)
+    implementation(libs.constraintlayout)
+    implementation(libs.firebase.auth)
+    implementation(libs.credentials)
+    implementation(libs.credentials.play.services.auth)
+    implementation(libs.googleid)
+    implementation(libs.androidx.room.runtime)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+}
+```
+
+### ./app/proguard-rules.pro
+```gradle
+# Add project specific ProGuard rules here.
+# You can control the set of applied configuration files using the
+# proguardFiles setting in build.gradle.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
+
+# Uncomment this to preserve the line number information for
+# debugging stack traces.
+#-keepattributes SourceFile,LineNumberTable
+
+# If you keep the line number information, uncomment this to
+# hide the original source file name.
+#-renamesourcefileattribute SourceFile
+```
+
+### ./build.gradle.kts
+```gradle
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.google.gms.google.services) apply false
+}
+```
+
+### ./data/build.gradle.kts
+```gradle
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.google.gms.google.services)
+}
+
+android {
+    namespace = "ru.mirea.shutov.data"
+    compileSdk = 36
+
+    defaultConfig {
+        minSdk = 24
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    implementation(project(":domain"))
+
+    implementation("com.squareup.retrofit2:retrofit:3.0.0")
+    implementation("com.squareup.retrofit2:converter-gson:3.0.0")
+
+    implementation(libs.appcompat)
+    implementation(libs.material)
+    implementation(libs.firebase.auth)
+    implementation(libs.credentials)
+    implementation(libs.credentials.play.services.auth)
+    implementation(libs.googleid)
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+}
+```
+
+### ./data/proguard-rules.pro
+```gradle
+# Add project specific ProGuard rules here.
+# You can control the set of applied configuration files using the
+# proguardFiles setting in build.gradle.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
+
+# Uncomment this to preserve the line number information for
+# debugging stack traces.
+#-keepattributes SourceFile,LineNumberTable
+
+# If you keep the line number information, uncomment this to
+# hide the original source file name.
+#-renamesourcefileattribute SourceFile
+```
+
+### ./domain/build.gradle.kts
+```gradle
+plugins {
+    alias(libs.plugins.android.library)
+}
+
+android {
+    namespace = "ru.mirea.shutov.domain"
+    compileSdk = 36
+
+    defaultConfig {
+        minSdk = 24
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    implementation(libs.appcompat)
+    implementation(libs.material)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+}
+```
+
+### ./domain/proguard-rules.pro
+```gradle
+# Add project specific ProGuard rules here.
+# You can control the set of applied configuration files using the
+# proguardFiles setting in build.gradle.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
+
+# Uncomment this to preserve the line number information for
+# debugging stack traces.
+#-keepattributes SourceFile,LineNumberTable
+
+# If you keep the line number information, uncomment this to
+# hide the original source file name.
+#-renamesourcefileattribute SourceFile
+```
+
+### ./gradle.properties
+```gradle
+# Project-wide Gradle settings.
+# IDE (e.g. Android Studio) users:
+# Gradle settings configured through the IDE *will override*
+# any settings specified in this file.
+# For more details on how to configure your build environment visit
+# http://www.gradle.org/docs/current/userguide/build_environment.html
+# Specifies the JVM arguments used for the daemon process.
+# The setting is particularly useful for tweaking memory settings.
+org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+# When configured, Gradle will run in incubating parallel mode.
+# This option should only be used with decoupled projects. For more details, visit
+# https://developer.android.com/r/tools/gradle-multi-project-decoupled-projects
+# org.gradle.parallel=true
+# AndroidX package structure to make it clearer which packages are bundled with the
+# Android operating system, and which are packaged with your app's APK
+# https://developer.android.com/topic/libraries/support-library/androidx-rn
+android.useAndroidX=true
+# Enables namespacing of each library's R class so that its R class includes only the
+# resources declared in the library itself and none from the library's dependencies,
+# thereby reducing the size of the R class for that library
+android.nonTransitiveRClass=true
+```
+
+### ./gradle/libs.versions.toml
+```gradle
+[versions]
+agp = "8.13.0"
+junit = "4.13.2"
+junitVersion = "1.3.0"
+espressoCore = "3.7.0"
+appcompat = "1.7.1"
+material = "1.13.0"
+activity = "1.11.0"
+constraintlayout = "2.2.1"
+googleGmsGoogleServices = "4.4.3"
+firebaseAuth = "24.0.1"
+credentials = "1.5.0"
+credentialsPlayServicesAuth = "1.5.0"
+googleid = "1.1.1"
+roomRuntime = "2.8.1"
+roomCompiler = "2.8.1"
+
+[libraries]
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }
+credentials-play-services-auth = { group = "androidx.credentials", name = "credentials-play-services-auth", version.ref = "credentialsPlayServicesAuth" }
+googleid = { group = "com.google.android.libraries.identity.googleid", name = "googleid", version.ref = "googleid" }
+room-compiler = { module = "androidx.room:room-compiler" }
+room-runtime = { module = "androidx.room:room-runtime" }
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "roomRuntime" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "roomCompiler" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+google-gms-google-services = { id = "com.google.gms.google-services", version.ref = "googleGmsGoogleServices" }
+
+
+```
+
+### ./settings.gradle.kts
+```gradle
+pluginManagement {
+    repositories {
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "AML Crypto Check"
+include(":app")
+include(":domain")
+include(":data")
+
+```
+
+## Manifests
+
+### ./app/src/main/AndroidManifest.xml
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AMLCryptoCheck"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".presentation.SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".presentation.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.MainActivity"
+            android:exported="false" />
+    </application>
+
+</manifest>
+```
+
+### ./data/src/main/AndroidManifest.xml
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+</manifest>
+```
+
+### ./domain/src/main/AndroidManifest.xml
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+</manifest>
+```
+
+## Kotlin файлы
+
+## Java файлы
+
+### ./app/src/main/java/ru/mirea/shutov/amlcryptocheck/presentation/HistoryAdapter.java
+```java
+package ru.mirea.shutov.amlcryptocheck.presentation;
+
+import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+import com.squareup.picasso.Picasso;
+import java.util.ArrayList;
+import java.util.List;
+import ru.mirea.shutov.amlcryptocheck.R;
+import ru.mirea.shutov.domain.models.WalletCheck;
+
+public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder> {
+
+    private List<WalletCheck> historyList = new ArrayList<>();
+    private Context context;
+
+    public HistoryAdapter(Context context) {
+        this.context = context;
+    }
+
+    public void setHistoryList(List<WalletCheck> historyList) {
+        this.historyList = historyList;
+        notifyDataSetChanged();
+    }
+
+    @NonNull
+    @Override
+    public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.history_item, parent, false);
+        return new HistoryViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull HistoryViewHolder holder, int position) {
+        WalletCheck item = historyList.get(position);
+        holder.textViewAddress.setText(item.getAddress());
+
+        int riskScore = item.getRiskScore();
+        if (riskScore > 75) {
+            holder.textViewRisk.setText("High Risk");
+            holder.textViewRisk.setTextColor(ContextCompat.getColor(context, R.color.risk_high));
+        } else if (riskScore > 40) {
+            holder.textViewRisk.setText("Medium Risk");
+            holder.textViewRisk.setTextColor(ContextCompat.getColor(context, R.color.risk_medium));
+        } else {
+            holder.textViewRisk.setText("Low Risk");
+            holder.textViewRisk.setTextColor(ContextCompat.getColor(context, R.color.risk_low));
+        }
+
+        String iconUrl = item.getCurrencyIconUrl();
+        Log.d("HistoryAdapter", "Icon URL: " + iconUrl);
+        if (!TextUtils.isEmpty(iconUrl)) {
+            Log.d("HistoryAdapter", "Loading icon from URL: " + iconUrl);
+            Picasso.get()
+                    .load(iconUrl)
+                    .placeholder(R.drawable.ic_placeholder)
+                    .error(R.drawable.ic_error)
+                    .into(holder.imageViewIcon);
+        } else {
+            holder.imageViewIcon.setImageResource(R.drawable.ic_placeholder);
+        }
+    }
+
+    @Override
+    public int getItemCount() {
+        return historyList.size();
+    }
+
+    static class HistoryViewHolder extends RecyclerView.ViewHolder {
+        ImageView imageViewIcon;
+        TextView textViewAddress;
+        TextView textViewRisk;
+
+        public HistoryViewHolder(@NonNull View itemView) {
+            super(itemView);
+            imageViewIcon = itemView.findViewById(R.id.imageViewCurrencyIcon);
+            textViewAddress = itemView.findViewById(R.id.textViewAddress);
+            textViewRisk = itemView.findViewById(R.id.textViewRisk);
+        }
+    }
+}
+```
+
+### ./app/src/main/java/ru/mirea/shutov/amlcryptocheck/presentation/HistoryFragment.java
+```java
+package ru.mirea.shutov.amlcryptocheck.presentation;
+
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import ru.mirea.shutov.amlcryptocheck.R;
+
+public class HistoryFragment extends Fragment {
+
+    private MainViewModel mainViewModel;
+    private HistoryAdapter historyAdapter;
+    private EditText editTextWalletAddress;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_history, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mainViewModel = new ViewModelProvider(this, new ViewModelFactory(requireContext())).get(MainViewModel.class);
+
+        editTextWalletAddress = view.findViewById(R.id.editTextWalletAddress);
+        RecyclerView recyclerViewHistory = view.findViewById(R.id.recyclerViewHistory);
+
+        historyAdapter = new HistoryAdapter(requireContext());
+        recyclerViewHistory.setLayoutManager(new LinearLayoutManager(requireContext()));
+        recyclerViewHistory.setAdapter(historyAdapter);
+
+        mainViewModel.getHistoryToDisplay().observe(getViewLifecycleOwner(), historyList -> {
+            if (historyList != null) {
+                historyAdapter.setHistoryList(historyList);
+            }
+        });
+
+        view.findViewById(R.id.buttonCheckRisk).setOnClickListener(v -> {
+            String address = editTextWalletAddress.getText().toString().trim();
+            if (!TextUtils.isEmpty(address)) {
+                mainViewModel.onCheckRiskClicked(address);
+                editTextWalletAddress.setText("");
+            } else {
+                Toast.makeText(requireContext(), "Please enter a wallet address", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        view.findViewById(R.id.buttonScan).setOnClickListener(v ->
+                Toast.makeText(requireContext(), "Scan feature coming soon!", Toast.LENGTH_SHORT).show());
+    }
+}
+```
+
+### ./app/src/main/java/ru/mirea/shutov/amlcryptocheck/presentation/LoginActivity.java
+```java
+package ru.mirea.shutov.amlcryptocheck.presentation;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.material.button.MaterialButton;
+
+import ru.mirea.shutov.amlcryptocheck.R;
+
+public class LoginActivity extends AppCompatActivity {
+
+    private LoginViewModel loginViewModel;
+
+    private EditText editTextEmail, editTextPassword;
+    private MaterialButton buttonSignIn;
+    private ProgressBar progressBar;
+    private TextView textViewRegister;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+
+        ViewModelFactory viewModelFactory = new ViewModelFactory(this);
+        loginViewModel = new ViewModelProvider(this, viewModelFactory).get(LoginViewModel.class);
+
+        editTextEmail = findViewById(R.id.editTextEmail);
+        editTextPassword = findViewById(R.id.editTextPassword);
+        buttonSignIn = findViewById(R.id.buttonSignIn);
+        progressBar = findViewById(R.id.progressBar);
+        textViewRegister = findViewById(R.id.textViewRegister);
+
+        loginViewModel.getLoginResult().observe(this, result -> {
+            if (result == null) return;
+
+            progressBar.setVisibility(result.getStatus() == LoginResult.Status.LOADING ? View.VISIBLE : View.GONE);
+
+            if (result.getStatus() == LoginResult.Status.SUCCESS) {
+                Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show();
+                navigateToMain();
+            } else if (result.getStatus() == LoginResult.Status.ERROR) {
+                Toast.makeText(this, result.getErrorMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+        buttonSignIn.setOnClickListener(v ->
+                loginUser());
+
+        textViewRegister.setOnClickListener(v ->
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
+    }
+
+    private void loginUser() {
+        String email = editTextEmail.getText().toString().trim();
+        String password = editTextPassword.getText().toString().trim();
+
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        loginViewModel.login(email, password);
+    }
+
+    private void navigateToMain() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+}
+```
+
+### ./app/src/main/java/ru/mirea/shutov/amlcryptocheck/presentation/LoginResult.java
+```java
+package ru.mirea.shutov.amlcryptocheck.presentation;
+
+import androidx.annotation.Nullable;
+
+public class LoginResult {
+
+    public enum Status {
+        LOADING,
+        SUCCESS,
+        ERROR
+    }
+
+    private final Status status;
+    @Nullable
+    private final String errorMessage;
+
+    private LoginResult(Status status, @Nullable String errorMessage) {
+        this.status = status;
+        this.errorMessage = errorMessage;
+    }
+
+    public static LoginResult loading() {
+        return new LoginResult(Status.LOADING, null);
+    }
+
+    public static LoginResult success() {
+        return new LoginResult(Status.SUCCESS, null);
+    }
+
+    public static LoginResult error(String message) {
+        return new LoginResult(Status.ERROR, message);
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    @Nullable
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+}
+```
+
+### ./app/src/main/java/ru/mirea/shutov/amlcryptocheck/presentation/LoginViewModel.java
+```java
+package ru.mirea.shutov.amlcryptocheck.presentation;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+import ru.mirea.shutov.domain.repository.AuthCallback;
+import ru.mirea.shutov.domain.usecase.LoginUseCase;
+
+public class LoginViewModel extends ViewModel {
+
+    private final LoginUseCase loginUseCase;
+
+    private final MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
+
+    public LiveData<LoginResult> getLoginResult() {
+        return loginResult;
+    }
+
+    public LoginViewModel(LoginUseCase loginUseCase) {
+        this.loginUseCase = loginUseCase;
+    }
+
+    public void login(String email, String password) {
+        loginResult.setValue(LoginResult.loading());
+
+        loginUseCase.execute(email, password, new AuthCallback() {
+            @Override
+            public void onSuccess() {
+                loginResult.setValue(LoginResult.success());
+            }
+
+            @Override
+            public void onError(String message) {
+                loginResult.setValue(LoginResult.error(message));
+            }
+        });
+    }
+}
+```
+
+### ./app/src/main/java/ru/mirea/shutov/amlcryptocheck/presentation/MainActivity.java
+```java
+package ru.mirea.shutov.amlcryptocheck.presentation;
+
+import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import ru.mirea.shutov.amlcryptocheck.R;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation_view);
+        bottomNav.setOnItemSelectedListener(navListener);
+
+        if (savedInstanceState == null) {
+            replaceFragment(new HistoryFragment());
+        }
+    }
+
+    private final BottomNavigationView.OnItemSelectedListener navListener =
+            item -> {
+                Fragment selectedFragment = null;
+
+                int itemId = item.getItemId();
+                if (itemId == R.id.navigation_history) {
+                    selectedFragment = new HistoryFragment();
+                } else if (itemId == R.id.navigation_profile) {
+                    selectedFragment = new ProfileFragment();
+                }
+
+                if (selectedFragment != null) {
+                    replaceFragment(selectedFragment);
+                    return true;
+                }
+                return false;
+            };
+
+    private void replaceFragment(Fragment fragment) {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_view, fragment)
+                .addToBackStack(null)
+                .commit();
+    }
+}
+```
+
+### ./app/src/main/java/ru/mirea/shutov/amlcryptocheck/presentation/MainViewModel.java
+```java
+package ru.mirea.shutov.amlcryptocheck.presentation;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import ru.mirea.shutov.domain.models.WalletCheck;
+import ru.mirea.shutov.domain.usecase.CheckWalletUseCase;
+import ru.mirea.shutov.domain.usecase.GetCheckHistoryUseCase;
+
+public class MainViewModel extends ViewModel {
+
+    private final CheckWalletUseCase checkWalletUseCase;
+    private final GetCheckHistoryUseCase getCheckHistoryUseCase;
+
+    private LiveData<List<WalletCheck>> historyFromDb;
+    private MutableLiveData<WalletCheck> singleCheckResult = new MutableLiveData<>();
+
+    private MediatorLiveData<List<WalletCheck>> historyToDisplay = new MediatorLiveData<>();
+
+    public MainViewModel(CheckWalletUseCase checkWalletUseCase, GetCheckHistoryUseCase getCheckHistoryUseCase) {
+        this.checkWalletUseCase = checkWalletUseCase;
+        this.getCheckHistoryUseCase = getCheckHistoryUseCase;
+
+        historyFromDb = this.getCheckHistoryUseCase.execute();
+
+        historyToDisplay.addSource(historyFromDb, dbList -> {
+            historyToDisplay.setValue(dbList);
+        });
+
+        historyToDisplay.addSource(singleCheckResult, networkResult -> {
+            if (networkResult != null) {
+                List<WalletCheck> currentList = historyFromDb.getValue();
+                if (currentList == null) {
+                    currentList = new ArrayList<>();
+                }
+                List<WalletCheck> combinedList = new ArrayList<>(currentList);
+                combinedList.add(0, networkResult);
+                historyToDisplay.setValue(combinedList);
+            }
+        });
+    }
+
+    public LiveData<List<WalletCheck>> getHistoryToDisplay() {
+        return historyToDisplay;
+    }
+
+    public void onCheckRiskClicked(String address) {
+        new Thread(() -> {
+            WalletCheck result = checkWalletUseCase.execute(address);
+            singleCheckResult.postValue(result);
+        }).start();
+    }
+}
+```
+
+### ./app/src/main/java/ru/mirea/shutov/amlcryptocheck/presentation/ProfileFragment.java
+```java
+package ru.mirea.shutov.amlcryptocheck.presentation;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
+import ru.mirea.shutov.amlcryptocheck.R;
+
+public class ProfileFragment extends Fragment {
+
+    private ProfileViewModel profileViewModel;
+    private TextView textViewUserEmail;
+    private Button buttonLogout;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_profile, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        profileViewModel = new ViewModelProvider(this, new ViewModelFactory(requireContext())).get(ProfileViewModel.class);
+        textViewUserEmail = view.findViewById(R.id.textViewUserEmail);
+        buttonLogout = view.findViewById(R.id.buttonLogout);
+
+        profileViewModel.getUserEmail().observe(getViewLifecycleOwner(), email ->
+                textViewUserEmail.setText(email));
+
+        profileViewModel.getLogoutEvent().observe(getViewLifecycleOwner(), loggedOut -> {
+            if (loggedOut != null && loggedOut) {
+                navigateToLogin();
+            }
+        });
+
+        buttonLogout.setOnClickListener(v -> {
+            profileViewModel.logout();
+        });
+
+        profileViewModel.loadUserData();
+    }
+
+    private void navigateToLogin() {
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        if (getActivity() != null) {
+            getActivity().finish();
+        }
+    }
+}
+```
+
+### ./app/src/main/java/ru/mirea/shutov/amlcryptocheck/presentation/ProfileViewModel.java
+```java
+package ru.mirea.shutov.amlcryptocheck.presentation;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import ru.mirea.shutov.domain.repository.AuthRepository;
+
+public class ProfileViewModel extends ViewModel {
+
+    private final AuthRepository authRepository;
+
+    private final MutableLiveData<String> userEmail = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> logoutEvent = new MutableLiveData<>();
+
+    public LiveData<String> getUserEmail() {
+        return userEmail;
+    }
+
+    public LiveData<Boolean> getLogoutEvent() {
+        return logoutEvent;
+    }
+
+    public ProfileViewModel(AuthRepository authRepository) {
+        this.authRepository = authRepository;
+    }
+
+    public void loadUserData() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            userEmail.setValue(currentUser.getEmail());
+        } else {
+            userEmail.setValue("No user logged in");
+        }
+    }
+
+    public void logout() {
+        authRepository.logout();
+        logoutEvent.setValue(true);
+    }
+}
+```
+
+### ./app/src/main/java/ru/mirea/shutov/amlcryptocheck/presentation/RegisterActivity.java
+```java
+package ru.mirea.shutov.amlcryptocheck.presentation;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.google.android.material.button.MaterialButton;
+
+import ru.mirea.shutov.amlcryptocheck.R;
+
+public class RegisterActivity extends AppCompatActivity {
+
+    private RegisterViewModel registerViewModel;
+
+    private EditText editTextEmail, editTextPassword;
+    private MaterialButton buttonRegister;
+    private ProgressBar progressBar;
+    private LinearLayout layoutLoginLink;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_register);
+
+        ViewModelFactory viewModelFactory = new ViewModelFactory(this);
+        registerViewModel = new ViewModelProvider(this, viewModelFactory).get(RegisterViewModel.class);
+
+        editTextEmail = findViewById(R.id.editTextEmail);
+        editTextPassword = findViewById(R.id.editTextPassword);
+        buttonRegister = findViewById(R.id.buttonRegister);
+        progressBar = findViewById(R.id.progressBar);
+        layoutLoginLink = findViewById(R.id.layoutLoginLink);
+
+        registerViewModel.getRegisterResult().observe(this, result -> {
+            if (result == null) return;
+
+            progressBar.setVisibility(result.getStatus() == RegisterResult.Status.LOADING ? View.VISIBLE : View.GONE);
+
+            if (result.getStatus() == RegisterResult.Status.SUCCESS) {
+                Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show();
+                navigateToMain();
+            } else if (result.getStatus() == RegisterResult.Status.ERROR) {
+                Toast.makeText(this, result.getErrorMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+        buttonRegister.setOnClickListener(v -> registerUser());
+        layoutLoginLink.setOnClickListener(v -> finish());
+    }
+
+    private void registerUser() {
+        String email = editTextEmail.getText().toString().trim();
+        String password = editTextPassword.getText().toString().trim();
+
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+            Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (password.length() < 6) {
+            Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        registerViewModel.register(email, password);
+    }
+
+    private void navigateToMain() {
+        Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+}
+```
+
+### ./app/src/main/java/ru/mirea/shutov/amlcryptocheck/presentation/RegisterResult.java
+```java
+package ru.mirea.shutov.amlcryptocheck.presentation;
+
+import androidx.annotation.Nullable;
+
+public class RegisterResult {
+    public enum Status {
+        LOADING,
+        SUCCESS,
+        ERROR
+    }
+
+    private final Status status;
+    @Nullable
+    private final String errorMessage;
+
+    private RegisterResult(Status status, @Nullable String errorMessage) {
+        this.status = status;
+        this.errorMessage = errorMessage;
+    }
+
+    public static RegisterResult loading() {
+        return new RegisterResult(Status.LOADING, null);
+    }
+
+    public static RegisterResult success() {
+        return new RegisterResult(Status.SUCCESS, null);
+    }
+
+    public static RegisterResult error(String message) {
+        return new RegisterResult(Status.ERROR, message);
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    @Nullable
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+}
+```
+
+### ./app/src/main/java/ru/mirea/shutov/amlcryptocheck/presentation/RegisterViewModel.java
+```java
+package ru.mirea.shutov.amlcryptocheck.presentation;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
+import ru.mirea.shutov.domain.repository.AuthCallback;
+import ru.mirea.shutov.domain.usecase.RegisterUseCase;
+
+public class RegisterViewModel extends ViewModel {
+
+    private final RegisterUseCase registerUseCase;
+
+    private final MutableLiveData<RegisterResult> registerResult = new MutableLiveData<>();
+
+    public LiveData<RegisterResult> getRegisterResult() {
+        return registerResult;
+    }
+
+    public RegisterViewModel(RegisterUseCase registerUseCase) {
+        this.registerUseCase = registerUseCase;
+    }
+
+    public void register(String email, String password) {
+        registerResult.setValue(RegisterResult.loading());
+
+        registerUseCase.execute(email, password, new AuthCallback() {
+            @Override
+            public void onSuccess() {
+                registerResult.setValue(RegisterResult.success());
+            }
+
+            @Override
+            public void onError(String message) {
+                registerResult.setValue(RegisterResult.error(message));
+            }
+        });
+    }
+}
+```
+
+### ./app/src/main/java/ru/mirea/shutov/amlcryptocheck/presentation/SplashActivity.java
+```java
+package ru.mirea.shutov.amlcryptocheck.presentation;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import ru.mirea.shutov.amlcryptocheck.R;
+import ru.mirea.shutov.data.repository.AuthRepositoryImpl;
+import ru.mirea.shutov.domain.repository.AuthRepository;
+import ru.mirea.shutov.domain.usecase.CheckUserLoggedInUseCase;
+
+public class SplashActivity extends AppCompatActivity {
+    private static final int SPLASH_DELAY = 1500;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
+
+        AuthRepository authRepository = new AuthRepositoryImpl();
+        CheckUserLoggedInUseCase checkUserLoggedInUseCase = new CheckUserLoggedInUseCase(authRepository);
+
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            boolean isLoggedIn = checkUserLoggedInUseCase.execute();
+            if (!isLoggedIn) {
+                navigateTo(LoginActivity.class);
+            } else {
+                navigateTo(MainActivity.class);
+            }
+        }, SPLASH_DELAY);
+    }
+
+    private void navigateTo(Class<?> activityClass) {
+        Intent intent = new Intent(SplashActivity.this, activityClass);
+        startActivity(intent);
+        finish();
+    }
+}
+```
+
+### ./app/src/main/java/ru/mirea/shutov/amlcryptocheck/presentation/ViewModelFactory.java
+```java
+package ru.mirea.shutov.amlcryptocheck.presentation;
+
+import android.content.Context;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+
+import ru.mirea.shutov.data.db.AppDatabase;
+import ru.mirea.shutov.data.network.RetrofitNetworkApi;
+import ru.mirea.shutov.data.repository.AuthRepositoryImpl;
+import ru.mirea.shutov.data.repository.WalletRepositoryImpl;
+import ru.mirea.shutov.domain.network.NetworkApi;
+import ru.mirea.shutov.domain.repository.AuthRepository;
+import ru.mirea.shutov.domain.repository.WalletRepository;
+import ru.mirea.shutov.domain.usecase.CheckWalletUseCase;
+import ru.mirea.shutov.domain.usecase.GetCheckHistoryUseCase;
+import ru.mirea.shutov.domain.usecase.LoginUseCase;
+import ru.mirea.shutov.domain.usecase.RegisterUseCase;
+
+public class ViewModelFactory implements ViewModelProvider.Factory {
+
+    private final Context context;
+
+    public ViewModelFactory(Context context) {
+        this.context = context.getApplicationContext();
+    }
+
+    @NonNull
+    @Override
+    public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+        if (modelClass.isAssignableFrom(MainViewModel.class)) {
+            AppDatabase db = AppDatabase.getDatabase(context);
+            NetworkApi networkApi = new RetrofitNetworkApi();
+            WalletRepository walletRepository = new WalletRepositoryImpl(networkApi, db.walletCheckDao());
+            CheckWalletUseCase checkWalletUseCase = new CheckWalletUseCase(walletRepository);
+            GetCheckHistoryUseCase getCheckHistoryUseCase = new GetCheckHistoryUseCase(walletRepository);
+            return (T) new MainViewModel(checkWalletUseCase, getCheckHistoryUseCase);
+        }
+        else if (modelClass.isAssignableFrom(LoginViewModel.class)) {
+            AuthRepository authRepository = new AuthRepositoryImpl();
+            LoginUseCase loginUseCase = new LoginUseCase(authRepository);
+            return (T) new LoginViewModel(loginUseCase);
+        }
+        else if (modelClass.isAssignableFrom(RegisterViewModel.class)) {
+            AuthRepository authRepository = new AuthRepositoryImpl();
+            RegisterUseCase registerUseCase = new RegisterUseCase(authRepository);
+            return (T) new RegisterViewModel(registerUseCase);
+        }
+        else if (modelClass.isAssignableFrom(ProfileViewModel.class)) {
+            AuthRepository authRepository = new AuthRepositoryImpl();
+            return (T) new ProfileViewModel(authRepository);
+        }
+        throw new IllegalArgumentException("Unknown ViewModel class: " + modelClass.getName());
+    }
+}
+```
+
+### ./data/src/main/java/ru/mirea/shutov/data/db/AppDatabase.java
+```java
+package ru.mirea.shutov.data.db;
+
+import android.content.Context;
+import androidx.room.Database;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
+
+@Database(entities = {WalletCheckDbo.class}, version = 1)
+public abstract class AppDatabase extends RoomDatabase {
+    public abstract WalletCheckDao walletCheckDao();
+
+    private static volatile AppDatabase INSTANCE;
+
+    public static AppDatabase getDatabase(final Context context) {
+        if (INSTANCE == null) {
+            synchronized (AppDatabase.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
+                            AppDatabase.class, "app_database").build();
+                }
+            }
+        }
+        return INSTANCE;
+    }
+}
+```
+
+### ./data/src/main/java/ru/mirea/shutov/data/db/WalletCheckDao.java
+```java
+package ru.mirea.shutov.data.db;
+
+import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
+import java.util.List;
+
+@Dao
+public interface WalletCheckDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insert(WalletCheckDbo walletCheck);
+
+    @Query("SELECT * FROM history_table ORDER BY checkDate DESC")
+    LiveData<List<WalletCheckDbo>> getAll();
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(List<WalletCheckDbo> dtoList);
+}
+```
+
+### ./data/src/main/java/ru/mirea/shutov/data/db/WalletCheckDbo.java
+```java
+package ru.mirea.shutov.data.db;
+
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "history_table")
+public class WalletCheckDbo {
+    @PrimaryKey(autoGenerate = true)
+    public int id;
+    public String address;
+    public int riskScore;
+    public long checkDate;
+    public String currencyIconUrl;
+}
+```
+
+### ./data/src/main/java/ru/mirea/shutov/data/network/AmlApiService.java
+```java
+package ru.mirea.shutov.data.network;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import ru.mirea.shutov.data.network.dto.WalletCheckDto;
+
+public interface AmlApiService {
+
+    @GET("wallet_history")
+    Call<List<WalletCheckDto>> getHistory();
+
+    @POST("wallet_history")
+    Call<WalletCheckDto> checkWallet(@Body WalletCheckDto checkRequest);
+}
+```
+
+### ./data/src/main/java/ru/mirea/shutov/data/network/MockNetworkApi.java
+```java
+package ru.mirea.shutov.data.network;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+import ru.mirea.shutov.domain.models.WalletCheck;
+import ru.mirea.shutov.domain.network.NetworkApi;
+
+public class MockNetworkApi implements NetworkApi {
+    @Override
+    public WalletCheck checkAddress(String address) {
+
+        // Имитируем задержку сети
+        try {
+            Thread.sleep(1000); // 1 секунда
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        // Возвращаем случайный результат
+        return new WalletCheck(
+                address,
+                new Random().nextInt(100), // Случайный риск от 0 до 99
+                System.currentTimeMillis(),
+                "https://example.com/icon.png"
+        );
+    }
+
+    @Override
+    public List<WalletCheck> getHistory() {
+        // Возвращаем пустой список для истории
+        return Collections.emptyList();
+    }
+}
+```
+
+### ./data/src/main/java/ru/mirea/shutov/data/network/RetrofitNetworkApi.java
+```java
+package ru.mirea.shutov.data.network;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import ru.mirea.shutov.data.network.dto.WalletCheckDto;
+import ru.mirea.shutov.domain.models.WalletCheck;
+import ru.mirea.shutov.domain.network.NetworkApi;
+
+public class RetrofitNetworkApi implements NetworkApi {
+
+    private static final String BASE_URL = "https://68fa9255ef8b2e621e805a85.mockapi.io/api/v1/";
+    private final AmlApiService apiService;
+
+    public RetrofitNetworkApi() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        this.apiService = retrofit.create(AmlApiService.class);
+    }
+
+    @Override
+    public WalletCheck checkAddress(String address) {
+        WalletCheckDto requestDto = new WalletCheckDto(address);
+
+        Call<WalletCheckDto> call = apiService.checkWallet(requestDto);
+
+        try {
+            Response<WalletCheckDto> response = call.execute();
+            if (response.isSuccessful() && response.body() != null) {
+                return mapDtoToDomain(response.body());
+            } else {
+                System.err.println("Network error: " + response.code());
+                return createErrorWalletCheck(address);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return createErrorWalletCheck(address);
+        }
+    }
+
+    @Override
+    public List<WalletCheck> getHistory() {
+        Call<List<WalletCheckDto>> call = apiService.getHistory();
+        try {
+            Response<List<WalletCheckDto>> response = call.execute();
+            if (response.isSuccessful() && response.body() != null) {
+                return response.body().stream()
+                        .map(this::mapDtoToDomain)
+                        .collect(Collectors.toList());
+            } else {
+                System.err.println("Network error: " + response.code());
+                return Collections.emptyList();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    private WalletCheck mapDtoToDomain(WalletCheckDto dto) {
+        return new WalletCheck(
+                dto.getAddress(),
+                dto.getRiskScore(),
+                dto.getCheckDate(),
+                dto.getCurrencyIconUrl()
+        );
+    }
+
+    private WalletCheck createErrorWalletCheck(String address) {
+        return new WalletCheck(address, -1, System.currentTimeMillis(), null);
+    }
+}
+```
+
+### ./data/src/main/java/ru/mirea/shutov/data/network/dto/WalletCheckDto.java
+```java
+package ru.mirea.shutov.data.network.dto;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+public class WalletCheckDto {
+
+    @SerializedName("id")
+    @Expose
+    private String id;
+
+    @SerializedName("address")
+    @Expose
+    private String address;
+
+    @SerializedName("riskScore")
+    @Expose
+    private Integer riskScore;
+
+    @SerializedName("checkDate")
+    @Expose
+    private Long checkDate;
+
+    @SerializedName("currencyIconUrl")
+    @Expose
+    private String currencyIconUrl;
+
+    public WalletCheckDto() {
+    }
+
+    public WalletCheckDto(String address) {
+        this.address = address;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public Integer getRiskScore() {
+        return riskScore;
+    }
+
+    public Long getCheckDate() {
+        return checkDate;
+    }
+
+    public String getCurrencyIconUrl() {
+        return currencyIconUrl;
+    }
+}
+```
+
+### ./data/src/main/java/ru/mirea/shutov/data/repository/AuthRepositoryImpl.java
+```java
+package ru.mirea.shutov.data.repository;
+
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.Objects;
+
+import ru.mirea.shutov.domain.repository.AuthCallback;
+import ru.mirea.shutov.domain.repository.AuthRepository;
+
+public class AuthRepositoryImpl implements AuthRepository {
+    private final FirebaseAuth mAuth;
+
+    public AuthRepositoryImpl() {
+        this.mAuth = FirebaseAuth.getInstance();
+    }
+
+    @Override
+    public void login(String email, String password, AuthCallback callback) {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        callback.onSuccess();
+                    } else {
+                        callback.onError(Objects.requireNonNull(task.getException()).getMessage());
+                    }
+                });
+    }
+
+    @Override
+    public void register(String email, String password, AuthCallback callback) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        callback.onSuccess();
+                    } else {
+                        callback.onError(Objects.requireNonNull(task.getException()).getMessage());
+                    }
+                });
+    }
+
+    @Override
+    public void logout() {
+        mAuth.signOut();
+    }
+
+    @Override
+    public boolean isUserLoggedIn() {
+        return mAuth.getCurrentUser() != null;
+    }
+}
+```
+
+### ./data/src/main/java/ru/mirea/shutov/data/repository/WalletRepositoryImpl.java
+```java
+package ru.mirea.shutov.data.repository;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import ru.mirea.shutov.data.db.WalletCheckDao;
+import ru.mirea.shutov.data.db.WalletCheckDbo;
+import ru.mirea.shutov.domain.network.NetworkApi;
+import ru.mirea.shutov.domain.models.WalletCheck;
+import ru.mirea.shutov.domain.repository.WalletRepository;
+
+public class WalletRepositoryImpl implements WalletRepository {
+
+    private final NetworkApi networkApi;
+    private final WalletCheckDao walletCheckDao;
+
+    public WalletRepositoryImpl(NetworkApi networkApi, WalletCheckDao walletCheckDao) {
+        this.networkApi = networkApi;
+        this.walletCheckDao = walletCheckDao;
+    }
+
+    @Override
+    public WalletCheck checkWallet(String address) {
+        WalletCheck domainResult = networkApi.checkAddress(address);
+        walletCheckDao.insert(mapToDbo(domainResult));
+        return domainResult;
+    }
+
+    @Override
+    public LiveData<List<WalletCheck>> getCheckHistory() {
+        new Thread(() -> {
+            List<WalletCheck> networkHistory = networkApi.getHistory();
+            if (networkHistory != null && !networkHistory.isEmpty()) {
+                List<WalletCheckDbo> dtoList = networkHistory.stream()
+                        .map(this::mapToDbo)
+                        .collect(Collectors.toList());
+                walletCheckDao.insertAll(dtoList);
+            }
+        }).start();
+
+        LiveData<List<WalletCheckDbo>> dtoListLiveData = walletCheckDao.getAll();
+        return Transformations.map(dtoListLiveData, dtoList ->
+                dtoList.stream().map(this::mapToDomain).collect(Collectors.toList())
+        );
+    }
+
+    private WalletCheckDbo mapToDbo(WalletCheck domainModel) {
+        WalletCheckDbo dbo = new WalletCheckDbo();
+        dbo.address = domainModel.getAddress();
+        dbo.riskScore = domainModel.getRiskScore();
+        dbo.checkDate = domainModel.getCheckDate();
+        dbo.currencyIconUrl = domainModel.getCurrencyIconUrl();
+        return dbo;
+    }
+
+    private WalletCheck mapToDomain(WalletCheckDbo dbo) {
+        return new WalletCheck(
+                dbo.address,
+                dbo.riskScore,
+                dbo.checkDate,
+                dbo.currencyIconUrl
+        );
+    }
+}
+```
+
+### ./data/src/main/java/ru/mirea/shutov/data/storage/ClientInfoStorage.java
+```java
+package ru.mirea.shutov.data.storage;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+
+public class ClientInfoStorage {
+    private static final String PREFS_NAME = "client_info_prefs";
+    private static final String KEY_USER_EMAIL = "user_email";
+    private final SharedPreferences sharedPreferences;
+
+    public ClientInfoStorage(Context context) {
+        sharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+    }
+
+    public void saveUserEmail(String email) {
+        sharedPreferences.edit().putString(KEY_USER_EMAIL, email).apply();
+    }
+
+    public String getUserEmail() {
+        return sharedPreferences.getString(KEY_USER_EMAIL, "Guest");
+    }
+}
+```
+
+### ./domain/src/main/java/ru/mirea/shutov/domain/models/WalletCheck.java
+```java
+package ru.mirea.shutov.domain.models;
+
+import androidx.annotation.Nullable;
+
+public class WalletCheck {
+    private final String address;
+    private final int riskScore;
+    private final long checkDate;
+    @Nullable
+    private final String currencyIconUrl;
+
+    public WalletCheck(String address, int riskScore, long checkDate, @Nullable String currencyIconUrl) {
+        this.address = address;
+        this.riskScore = riskScore;
+        this.checkDate = checkDate;
+        this.currencyIconUrl = currencyIconUrl;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public int getRiskScore() {
+        return riskScore;
+    }
+
+    public long getCheckDate() {
+        return checkDate;
+    }
+
+    @Nullable
+    public String getCurrencyIconUrl() {
+        return currencyIconUrl;
+    }
+}
+```
+
+### ./domain/src/main/java/ru/mirea/shutov/domain/network/NetworkApi.java
+```java
+package ru.mirea.shutov.domain.network;
+
+import java.util.List;
+
+import ru.mirea.shutov.domain.models.WalletCheck;
+
+public interface NetworkApi {
+    WalletCheck checkAddress(String address);
+    List<WalletCheck> getHistory();
+}
+```
+
+### ./domain/src/main/java/ru/mirea/shutov/domain/repository/AuthCallback.java
+```java
+package ru.mirea.shutov.domain.repository;
+
+public interface AuthCallback {
+    void onSuccess();
+    void onError(String message);
+}
+
+```
+
+### ./domain/src/main/java/ru/mirea/shutov/domain/repository/AuthRepository.java
+```java
+package ru.mirea.shutov.domain.repository;
+
+public interface AuthRepository {
+    void login(String email, String password, AuthCallback callback);
+    void register(String email, String password, AuthCallback callback);
+    void logout();
+    boolean isUserLoggedIn();
+}
+
+```
+
+### ./domain/src/main/java/ru/mirea/shutov/domain/repository/WalletRepository.java
+```java
+package ru.mirea.shutov.domain.repository;
+
+import androidx.lifecycle.LiveData;
+
+import java.util.List;
+
+import ru.mirea.shutov.domain.models.WalletCheck;
+
+public interface WalletRepository {
+    WalletCheck checkWallet(String address);
+    LiveData<List<WalletCheck>> getCheckHistory();
+}
+```
+
+### ./domain/src/main/java/ru/mirea/shutov/domain/usecase/CheckUserLoggedInUseCase.java
+```java
+package ru.mirea.shutov.domain.usecase;
+
+import ru.mirea.shutov.domain.repository.AuthRepository;
+
+public class CheckUserLoggedInUseCase {
+    private final AuthRepository authRepository;
+
+    public CheckUserLoggedInUseCase(AuthRepository authRepository) {
+        this.authRepository = authRepository;
+    }
+
+    public boolean execute() {
+        return authRepository.isUserLoggedIn();
+    }
+}
+
+```
+
+### ./domain/src/main/java/ru/mirea/shutov/domain/usecase/CheckWalletUseCase.java
+```java
+package ru.mirea.shutov.domain.usecase;
+
+import ru.mirea.shutov.domain.models.WalletCheck;
+import ru.mirea.shutov.domain.repository.WalletRepository;
+
+public class CheckWalletUseCase {
+    private final WalletRepository walletRepository;
+    public CheckWalletUseCase(WalletRepository walletRepository) {
+        this.walletRepository = walletRepository;
+    }
+    public WalletCheck execute(String address) {
+        return walletRepository.checkWallet(address);
+    }
+}
+```
+
+### ./domain/src/main/java/ru/mirea/shutov/domain/usecase/GetCheckHistoryUseCase.java
+```java
+package ru.mirea.shutov.domain.usecase;
+
+import androidx.lifecycle.LiveData;
+
+import java.util.List;
+
+import ru.mirea.shutov.domain.models.WalletCheck;
+import ru.mirea.shutov.domain.repository.WalletRepository;
+
+public class GetCheckHistoryUseCase {
+    private final WalletRepository walletRepository;
+
+    public GetCheckHistoryUseCase(WalletRepository walletRepository) {
+        this.walletRepository = walletRepository;
+    }
+
+    public LiveData<List<WalletCheck>> execute() {
+        return walletRepository.getCheckHistory();
+    }
+}
+```
+
+### ./domain/src/main/java/ru/mirea/shutov/domain/usecase/LoginUseCase.java
+```java
+package ru.mirea.shutov.domain.usecase;
+
+import ru.mirea.shutov.domain.repository.AuthCallback;
+import ru.mirea.shutov.domain.repository.AuthRepository;
+
+public class LoginUseCase {
+    private final AuthRepository authRepository;
+
+    public LoginUseCase(AuthRepository authRepository) {
+        this.authRepository = authRepository;
+    }
+
+    public void execute(String email, String password, AuthCallback callback) {
+        authRepository.login(email, password, callback);
+    }
+}
+```
+
+### ./domain/src/main/java/ru/mirea/shutov/domain/usecase/RegisterUseCase.java
+```java
+package ru.mirea.shutov.domain.usecase;
+
+import ru.mirea.shutov.domain.repository.AuthCallback;
+import ru.mirea.shutov.domain.repository.AuthRepository;
+
+public class RegisterUseCase {
+    private final AuthRepository authRepository;
+
+    public RegisterUseCase(AuthRepository authRepository) {
+        this.authRepository = authRepository;
+    }
+
+    public void execute(String email, String password, AuthCallback callback) {
+        authRepository.register(email, password, callback);
+    }
+}
+
+```
+
+### ./app/src/main/res/values/colors.xml
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="dark_blue_primary">#101828</color> <!-- Фон экрана -->
+    <color name="dark_blue_secondary">#1D2939</color> <!-- Фон полей ввода -->
+    <color name="accent_blue">#0099FF</color> <!-- Цвет кнопки и ссылок -->
+    <color name="white_text">#FFFFFF</color>
+    <color name="light_gray_text">#D0D5DD</color> <!-- Цвет второстепенного текста -->
+    <color name="hint_text_color">#667085</color> <!-- Цвет подсказок в полях ввода -->
+
+    <color name="risk_high">#F04438</color> <!-- Красный -->
+    <color name="risk_medium">#F79009</color> <!-- Оранжевый -->
+    <color name="risk_low">#12B76A</color> <!-- Зеленый -->
+
+    <color name="dark_blue_tertiary">#1D2939</color>
+</resources>
+```
+
+### ./app/src/main/res/values/strings.xml
+```xml
+<resources>
+    <string name="app_name">AML Crypto Check</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
+```
+
+### ./app/src/main/res/values/themes.xml
+```xml
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.AMLCryptoCheck" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
+
+    <style name="Theme.AMLCryptoCheck" parent="Base.Theme.AMLCryptoCheck" />
+</resources>
+```
+
+### ./app/src/main/res/xml/backup_rules.xml
+```xml
+<?xml version="1.0" encoding="utf-8"?><!--
+   Sample backup rules file; uncomment and customize as necessary.
+   See https://developer.android.com/guide/topics/data/autobackup
+   for details.
+   Note: This file is ignored for devices older than API 31
+   See https://developer.android.com/about/versions/12/backup-restore
+-->
+<full-backup-content>
+    <!--
+   <include domain="sharedpref" path="."/>
+   <exclude domain="sharedpref" path="device.xml"/>
+-->
+</full-backup-content>
+```
+
+### ./app/src/main/res/xml/data_extraction_rules.xml
+```xml
+<?xml version="1.0" encoding="utf-8"?><!--
+   Sample data extraction rules file; uncomment and customize as necessary.
+   See https://developer.android.com/about/versions/12/backup-restore#xml-changes
+   for details.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <!-- TODO: Use <include> and <exclude> to control what is backed up.
+        <include .../>
+        <exclude .../>
+        -->
+    </cloud-backup>
+    <!--
+    <device-transfer>
+        <include .../>
+        <exclude .../>
+    </device-transfer>
+    -->
+</data-extraction-rules>
+```
+
+## Firebase Functions
+
+## Firebase Rules
+## Firebase Rules
+

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="fitness_primary">#FF5722</color> <!-- Оранжевый -->
+    <color name="fitness_secondary">#37474F</color> <!-- Темно-серый -->
+    <color name="fitness_accent">#FFCCBC</color> <!-- Светло-оранжевый -->
+</resources>
