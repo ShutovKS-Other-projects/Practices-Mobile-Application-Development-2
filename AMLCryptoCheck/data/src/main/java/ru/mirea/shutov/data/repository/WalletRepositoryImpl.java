@@ -25,7 +25,9 @@ public class WalletRepositoryImpl implements WalletRepository {
     @Override
     public WalletCheck checkWallet(String address) {
         WalletCheck domainResult = networkApi.checkAddress(address);
-        walletCheckDao.insert(mapToDbo(domainResult));
+        if (domainResult != null) {
+            walletCheckDao.insert(mapToDbo(domainResult));
+        }
         return domainResult;
     }
 
@@ -35,9 +37,11 @@ public class WalletRepositoryImpl implements WalletRepository {
             List<WalletCheck> networkHistory = networkApi.getHistory();
             if (networkHistory != null && !networkHistory.isEmpty()) {
                 List<WalletCheckDbo> dtoList = networkHistory.stream()
+                        .filter(h -> h != null)
                         .map(this::mapToDbo)
                         .collect(Collectors.toList());
                 walletCheckDao.insertAll(dtoList);
+                walletCheckDao.deleteDuplicateKeepingLatest();
             }
         }).start();
 
